@@ -1,11 +1,19 @@
 # Brief
 
-**What is this prototype for?**
+<!-- Not filled in yet. The kickoff skill fills this in and removes this line. -->
 
-**Who is it for, and who will look at it?**
+## Who is it for
 
-**What should someone be able to see or do?**
+## The moment
 
-**What is out of scope?**
+## What they should be able to see or do
 
-**What feedback do we want?**
+## The one thing it must get right
+
+## How it should feel
+
+## Out of scope
+
+## Data
+
+## Feedback
