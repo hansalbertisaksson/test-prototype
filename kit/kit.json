@@ -1,0 +1,239 @@
+{
+  "profile": "prototype",
+  "profiles": {
+    "prototype": [
+      {
+        "mode": "block",
+        "check": "secrets"
+      },
+      {
+        "mode": "block",
+        "check": "personal-data"
+      },
+      {
+        "mode": "block",
+        "check": "file-size"
+      },
+      {
+        "mode": "warn",
+        "check": "raw-colors"
+      },
+      {
+        "mode": "warn",
+        "check": "ui-components"
+      }
+    ],
+    "internal": [
+      {
+        "mode": "block",
+        "check": "secrets"
+      },
+      {
+        "mode": "block",
+        "check": "personal-data"
+      },
+      {
+        "mode": "block",
+        "check": "file-size"
+      },
+      {
+        "mode": "block",
+        "check": "raw-colors"
+      },
+      {
+        "mode": "block",
+        "check": "ui-components"
+      },
+      {
+        "mode": "block",
+        "check": "typecheck"
+      },
+      {
+        "mode": "block",
+        "check": "dependency-audit"
+      },
+      {
+        "mode": "warn",
+        "check": "licences"
+      }
+    ],
+    "client": [
+      {
+        "mode": "block",
+        "check": "secrets"
+      },
+      {
+        "mode": "block",
+        "check": "personal-data"
+      },
+      {
+        "mode": "block",
+        "check": "file-size"
+      },
+      {
+        "mode": "block",
+        "check": "raw-colors"
+      },
+      {
+        "mode": "block",
+        "check": "ui-components"
+      },
+      {
+        "mode": "block",
+        "check": "typecheck"
+      },
+      {
+        "mode": "block",
+        "check": "dependency-audit"
+      },
+      {
+        "mode": "block",
+        "check": "licences"
+      }
+    ]
+  },
+  "house_rules": "# House rules\n\nThese rules apply to every project built on this core. They are read by Claude, GitHub Copilot and any other agent that follows AGENTS.md. The project's own `AGENTS.md` adds to these and wins where the two differ.\n\n## How we build\n\n1. Start from the brief in `docs/brief.md`. If it says it is not filled in yet, run the `kickoff` skill first: ask its questions one at a time and write the answers there before building anything.\n2. Build every component with shadcn/ui. Use what is in `src/components/ui/`, add missing ones with `npx shadcn@latest add <name>`, and never hand-make a button, input, card or dialog. Style with Tailwind and the theme colours (`bg-primary`, `text-muted-foreground`), never hard-coded colours. Follow the `use-shadcn` skill.\n3. A prototype is a rough first draft for designers to take further. Keep it simple, readable and easy to change: React, Vite, Tailwind and shadcn/ui, nothing more unless the brief asks for it.\n4. The app lives in `src/`. The build publishes it, so whatever is in `src/` is what people see.\n5. Record any decision worth remembering in `docs/decisions.md`, with one line on why.\n\n## What you never do\n\n- Never edit anything inside `.core/`. It is shared and read-only. Suggest the change instead.\n- Never commit secrets, API keys, tokens or passwords. Use environment variables and say which ones are needed.\n- Never use real personal data such as names, emails, phone numbers or personal identity numbers. Use clearly fake sample data.\n- Never add tracking, analytics or third-party scripts without it being written in the brief.\n- Never turn off or work around a check. If a check fails, fix the cause or explain why it is wrong.\n\n## Internal tools\n\nWhen `.buildkit` says `profile=internal`, the tool is for the agency itself. Type errors, vulnerable dependencies and design drift block. Its live link is public, so it uses fake data until it has private hosting.\n\n## Client projects\n\nWhen `.buildkit` says `profile=client`, these apply on top:\n\n- Every check blocks. Never move a project to a weaker profile.\n- Change `main` only through a pull request that a person reviews. Never merge or approve yourself.\n- The core version is pinned. Update it on purpose with `./scripts/update-core.sh`, in its own pull request.\n- Client data and credentials never go in the repo, not even as samples. Use fake data and the client's own secret store.\n\n## Checks\n\nRun `.core/hooks/checks/run.sh` to check the project. The same checks run in git pre-commit, after Claude edits a file, and in CI. CI is the one that counts.\n\n## Skills\n\nSkills live in `.core/skills/`. Use them when the task matches:\n\n- `start-prototype` for creating a brand new prototype, from nothing to a live link\n- `kickoff` for starting a new prototype and writing the brief\n- `build-prototype` for building or changing a page\n- `use-shadcn` for any component, layout or styling\n- `ship-prototype` for publishing and sharing the live link\n- `start-client` for setting up a new client project\n- `ship-client` for handing over a client change as a pull request\n",
+  "skills": [
+    {
+      "name": "build-prototype",
+      "description": "Build or change a page in a Build Kit prototype. Use when asked to make, sketch or change anything that will be shown in the browser.",
+      "steps": [
+        "Read `docs/brief.md`. If it is not filled in yet, run the `kickoff` skill first.",
+        "The app is React with Vite, Tailwind and shadcn/ui. `src/App.tsx` is the start page. Put more pages in `src/pages/<Name>.tsx` and switch between them with simple state or `#hash` links. Add a router only if the brief needs real URLs.",
+        "Build every component with shadcn/ui and style with the theme. Follow the `use-shadcn` skill.",
+        "Keep it one simple draft: fake data in a `src/data.ts` file, no backend, no login that really works.",
+        "Use fake sample content. No real names, emails or other personal data.",
+        "Preview at the localhost link the session start printed (usually http://localhost:8000). Opening the project in Claude Code starts it, or run `npm run dev`. It updates as you save.",
+        "Run `npm run typecheck` and `.core/hooks/checks/run.sh`, and fix anything that blocks.",
+        "Add a line to `docs/decisions.md` for any choice a designer would want to know about."
+      ],
+      "questions": []
+    },
+    {
+      "name": "kickoff",
+      "description": "Start a new prototype by asking the kickoff questions and writing the brief. Use when docs/brief.md is not filled in, or when someone says they want to start something new.",
+      "steps": [
+        "Say in one sentence that you'll ask a few quick questions first, so the first draft is about the right thing.",
+        "Skip anything the person has already told you, for example what it is and who it's for when the project was just created. Ask the rest **one at a time**. Wait for each answer. Keep your own words short and friendly, and offer an example answer if the person seems unsure.",
+        "If an answer is vague, ask one follow-up at most, then move on. If the person answers several questions at once, or pastes a whole brief, accept it and only ask about what's missing.",
+        "When all questions are answered, write `docs/brief.md` with one short section per question, in the person's own words. Remove the line that says the brief is not filled in.",
+        "Read the brief back as three bullet points and ask if it's right.",
+        "Only then start building, using the `build-prototype` skill."
+      ],
+      "questions": [
+        "Who is it for? Who will use it, and who will look at the prototype?",
+        "The moment. When does someone need this? What are they trying to get done?",
+        "What should they see or do? The two or three things the prototype must show.",
+        "The one thing it must get right. If only one thing works, what should it be?",
+        "How should it feel? Three words, or a reference you like.",
+        "Out of scope. What should it clearly not try to do yet?",
+        "Data. Does it touch any real personal or client data? If yes, we use fake sample data and note it here.",
+        "Feedback. Who gives feedback, and what kind of feedback do you want?"
+      ]
+    },
+    {
+      "name": "ship-client",
+      "description": "Hand over a change in a client project as a pull request for review. Use when asked to ship, deliver, push or share work in a project whose .buildkit says profile=client.",
+      "steps": [
+        "Work on a branch, never on `main`: `git switch -c <short-description>`. The pre-push hook stops pushes to `main`.",
+        "Run `.core/hooks/checks/run.sh`. In the client profile every check blocks, so all of them must pass, including `typecheck`, `dependency-audit` and `licences`.",
+        "Commit with messages that say what changed for the client, not how.",
+        "Push the branch and open a pull request with `gh pr create`. In the description, write what changed, how to look at it, and anything the reviewer should check by hand (copy, accessibility, edge cases).",
+        "Tell the person the pull request link and who should review it, as named in `docs/brief.md`.",
+        "Never merge it yourself and never approve it. A person reviews and merges.",
+        "After the merge, CI builds the site on `main` and keeps it as a download on the run. Deploying it to the client's hosting follows the plan in `docs/brief.md`."
+      ],
+      "questions": []
+    },
+    {
+      "name": "ship-prototype",
+      "description": "Publish a Build Kit prototype and share its live link. Use when asked to deploy, publish, ship or share the prototype.",
+      "steps": [
+        "Run `.core/hooks/checks/run.sh`. Nothing may block.",
+        "Commit with a short message that says what changed for the person looking at it.",
+        "Push to `main`. CI runs the same checks, builds the app and publishes it to GitHub Pages.",
+        "The live link is `https://<owner>.github.io/<repo>/`. The repo README shows it too.",
+        "Share the link together with one sentence on what to look at and what kind of feedback you want."
+      ],
+      "questions": []
+    },
+    {
+      "name": "start-client",
+      "description": "Set up a new client project from the client template. Use when someone needs a repo for real client work, a delivery or a production site, not a quick prototype.",
+      "steps": [
+        "Ask one question: which client and what is the delivery? Suggest a repo name in lowercase with dashes, like `acme-booking`, and ask for a go-ahead in one message: \"I'll create `acme-booking` as a private repo on your GitHub. OK?\" Their yes is the approval for step 2.",
+        "Follow step 2 of the `start-prototype` skill with the template `hansalbertisaksson/template-client`, and create the repo with `--private` instead of `--public`. `go-live.sh` sees the client profile and skips the public link.",
+        "When it prints `READY`, run `CLAUDE_PROJECT_DIR=<folder> <folder>/scripts/session-start.sh`, then follow the `kickoff` skill inside `<folder>`, including the client questions.",
+        "Build with `build-prototype` and `use-shadcn`. Hand over every change with `ship-client`.",
+        "Tell the person once: in GitHub, under Settings, Branches, protect `main` so it needs a review. On a free personal account this needs a public repo or a paid plan. Until then the pre-push hook and the house rules keep `main` behind pull requests."
+      ],
+      "questions": []
+    },
+    {
+      "name": "start-prototype",
+      "description": "Start a new prototype or internal tool, from nothing to a live link. Use when someone asks to build a prototype, demo, mockup, quick site, page, app, dashboard or internal tool for a client, the agency or a pitch, and there is no Build Kit project folder for it yet. Use this instead of making a claude.ai artifact.",
+      "steps": [
+        "**Check the GitHub CLI.** `gh auth status`. If `gh` is missing, ask the person if you may run `brew install gh`. If they are not logged in, ask them to type `! gh auth login` here, choose GitHub.com, HTTPS and \"Login with a web browser\". It happens only once.",
+        "**Check Node.** `npm --version`. If it is missing, ask if you may run `brew install node`.",
+        "**Create the repo**, unless it already exists from an earlier try:",
+        "**Copy it to the Mac** over HTTPS with the GitHub CLI's login, so it works without SSH keys. Skip this if `~/GitHub/<name>/.git` already exists. GitHub needs a few seconds to fill a new repo, so try up to five times, a few seconds apart:",
+        "**Set it up and switch on the live link:** `cd ~/GitHub/<name> && ./scripts/setup.sh && .core/scripts/go-live.sh`. It prints `READY` with the links, or a line starting with `STOPPED`."
+      ],
+      "questions": []
+    },
+    {
+      "name": "use-shadcn",
+      "description": "Build every component with shadcn/ui and style with the theme. Use whenever adding or changing a component, a layout, colours, type or spacing.",
+      "steps": [
+        "Check `src/components/ui/` for the component you need. The template comes with button, card, badge, input, label, textarea, select, checkbox, switch, tabs, dialog, avatar, table, progress, separator and skeleton.",
+        "If it's missing, add it with `npx shadcn@latest add <name>` (for example `npx shadcn@latest add dropdown-menu sheet`). Look at the full list on ui.shadcn.com before building anything by hand.",
+        "Compose pages from these components. For whole sections such as a login, a dashboard or a sidebar, start from a shadcn block (`npx shadcn@latest add login-03`) and adapt it.",
+        "Import from `@/components/ui/<name>`. Icons come from `lucide-react`.",
+        "Style with Tailwind classes and the theme colours only: `bg-background`, `text-foreground`, `bg-primary`, `text-primary-foreground`, `bg-muted`, `text-muted-foreground`, `border`, `bg-card`, `text-destructive` and the other names in `src/index.css`.",
+        "Change the look in one place: the CSS variables in `src/index.css`. Record the change in `docs/decisions.md`."
+      ],
+      "questions": []
+    }
+  ],
+  "checks": [
+    {
+      "mode": "block",
+      "check": "secrets",
+      "description": "Looks for API keys, tokens and private keys.",
+      "result": "ok",
+      "message": ""
+    },
+    {
+      "mode": "block",
+      "check": "personal-data",
+      "description": "Looks for Swedish and Norwegian personal identity numbers.",
+      "result": "ok",
+      "message": ""
+    },
+    {
+      "mode": "block",
+      "check": "file-size",
+      "description": "Stops files over 5 MB from being committed. Large media belongs in a shared drive or a CDN.",
+      "result": "ok",
+      "message": ""
+    },
+    {
+      "mode": "warn",
+      "check": "raw-colors",
+      "description": "Flags hard-coded colours so everything visual comes from the theme in src/index.css.",
+      "result": "ok",
+      "message": ""
+    },
+    {
+      "mode": "warn",
+      "check": "ui-components",
+      "description": "Flags hand-made buttons, inputs and dialogs so every component comes from shadcn/ui.",
+      "result": "ok",
+      "message": ""
+    }
+  ],
+  "core_version": "34f262f",
+  "project_version": "d7e6e64",
+  "repository": "hansalbertisaksson/test-prototype",
+  "built_at": "2026-10-27 22:17 UTC"
+}

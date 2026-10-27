@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How this prototype is built</title>
+  <link rel="stylesheet" href="kit.css?v=34f262f">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="btn btn-ghost" href="../">← Back to the prototype</a>
+      <nav class="topbar-links"><a href="#skills">Skills</a><a href="#hooks">Hooks</a><a href="#checks">Checks</a><a href="#rules">Rules</a></nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <span class="badge badge-secondary">Build Kit</span>
+      <h1>How this prototype is built</h1>
+      <p class="lead">Every prototype starts from the same shared core. Skills tell the AI how we build. Hooks steer it while it works. Checks catch what must never ship. This page is generated on every deploy, so it shows what actually ran.</p>
+      <dl class="meta" id="meta"></dl>
+    </section>
+
+    <section class="steps">
+      <div class="card"><span class="step-num">1</span><h3>Kickoff questions</h3><p class="muted">A short brief before anything is built.</p></div>
+      <div class="card"><span class="step-num">2</span><h3>Skills guide the AI</h3><p class="muted">Every page is built from shadcn/ui components.</p></div>
+      <div class="card"><span class="step-num">3</span><h3>Checks catch mistakes</h3><p class="muted">Secrets and personal data never ship.</p></div>
+      <div class="card"><span class="step-num">4</span><h3>Live in a minute</h3><p class="muted">Every push to main publishes a live link.</p></div>
+    </section>
+
+    <section class="section" id="skills">
+      <div class="section-head"><h2>Skills</h2><p class="muted">Step-by-step know-how the AI picks up when the task matches. Written once in the core, used in every project.</p></div>
+      <div class="card rows" id="skills-list"></div>
+    </section>
+
+    <section class="section" id="hooks">
+      <div class="section-head"><h2>Hooks</h2><p class="muted">Small scripts that run at fixed moments while the AI works. They steer it without anyone having to remember.</p></div>
+      <div class="card rows">
+        <div class="row"><p class="eyebrow">When a session starts</p><h3 class="row-title">Set up, then kickoff</h3><p class="row-text">Fetches the shared core, installs the app and starts a local preview. In a new project the AI asks the kickoff questions before anything else. Otherwise it gets the brief, so nobody explains it again.</p></div>
+        <div class="row"><p class="eyebrow">Before the AI edits a file</p><h3 class="row-title">Brief first</h3><p class="row-text">The pages stay locked until the brief is written. The shared core can never be edited from a project.</p></div>
+        <div class="row"><p class="eyebrow">After the AI edits a file</p><h3 class="row-title">Check and fix</h3><p class="row-text">The checks run straight away. If one blocks, the AI gets the reason back and fixes the cause itself.</p></div>
+      </div>
+    </section>
+
+    <section class="section" id="checks">
+      <div class="section-head"><h2>Checks</h2><p class="muted">The same plain scripts run on commit, after the AI edits, and in CI on every push. Only CI is required. Nothing goes live without it.</p></div>
+      <div class="card rows" id="checks-list"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>See it catch something</h2><p class="muted">What happens if someone, or the AI, tries to commit an API key, a real personal identity number and a hand-made button.</p></div>
+      <pre class="terminal"><span class="t-dim">$</span> git commit -m "Add sign-up form"
+Build Kit checks, profile: prototype
+  <span class="t-block">FAIL</span>  secrets
+        src/api.ts:12: looks like a secret
+  <span class="t-block">FAIL</span>  personal-data
+        src/data.ts:3: looks like a personal identity number
+  <span class="t-ok">ok</span>    file-size
+  <span class="t-ok">ok</span>    raw-colors
+  <span class="t-warn">warn</span>  ui-components
+        src/App.tsx:24: plain &lt;button&gt;, use the shadcn/ui component instead
+A blocking check failed. Fix the cause, do not turn the check off.</pre>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Stricter as the risk goes up</h2><p class="muted">The profile decides which checks block and which only warn. This project uses <span id="profile-name"></span>.</p></div>
+      <div class="card table-wrap"><table class="matrix" id="matrix"></table></div>
+    </section>
+
+    <section class="section" id="rules">
+      <div class="section-head"><h2>House rules</h2><p class="muted">The rules every agent reads, straight from the core.</p></div>
+      <div class="card rules" id="rules-text"></div>
+    </section>
+  </main>
+
+  <script src="kit.js?v=34f262f"></script>
+</body>
+</html>
