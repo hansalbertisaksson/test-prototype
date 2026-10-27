@@ -6,9 +6,11 @@ A starting point for a prototype built with AI. It builds from the shared [test-
 
 1. Click **Use this template**, then **Create a new repository**. Make it public.
 2. Wait about a minute for the first build. The live link is `https://<owner>.github.io/<repo>/`.
-3. Clone it and run `./scripts/start.sh`. This fetches the core, turns on the local checks and opens a preview at http://localhost:8000.
-4. Open the project in Claude Code and say what you want to make. It asks a few kickoff questions first and writes `docs/brief.md`, then builds from it.
+3. Clone it, `cd` into it and run `claude`. Opening the project fetches the shared core, turns on the checks and starts a preview at http://localhost:8000.
+4. Say what you want to make. It asks a few kickoff questions first and writes `docs/brief.md`, then builds from it.
 5. See how it's built at `https://<owner>.github.io/<repo>/kit/`.
+
+Without Claude, run `./scripts/start.sh` for the same setup and preview.
 
 If the first build is green but the link shows a 404, open **Settings**, then **Pages**, and choose **Deploy from a branch** with `gh-pages` and `/ (root)`. You only do this once.
 
