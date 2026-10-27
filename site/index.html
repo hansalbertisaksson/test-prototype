@@ -9,28 +9,42 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="container">
-    <header class="hero">
-      <p class="eyebrow">Prototype</p>
-      <h1>A rough first draft, live from the first push.</h1>
-      <p class="muted">This page is built from the shared design tokens and published automatically. Replace it with whatever the brief asks for.</p>
-      <a class="button" href="kit/">How this is built</a>
-    </header>
+  <nav class="site-nav">
+    <a href="./">New prototype<small>Built with the Build Kit</small></a>
+    <a href="#idea">Idea</a>
+    <a href="#steps">Steps</a>
+    <a href="kit/">How it's built</a>
+    <a href="https://github.com/hansalbertisaksson/test-core">Core</a>
+  </nav>
 
-    <section class="grid">
-      <article class="card">
-        <h3>1. Answer a few questions</h3>
-        <p class="muted">Open the project with Claude. It asks who this is for and what it should do, then writes the brief.</p>
-      </article>
-      <article class="card">
-        <h3>2. Build with AI</h3>
-        <p class="muted">Claude and Copilot follow the shared house rules and use the design system.</p>
-      </article>
-      <article class="card">
-        <h3>3. Push and share</h3>
-        <p class="muted">Every push to main is checked and goes live here within a minute.</p>
-      </article>
+  <main>
+    <section class="display-section">
+      <h1 class="display">A rough first draft that is live in a minute</h1>
     </section>
+
+    <div class="page">
+      <section class="split" id="idea">
+        <h2>The idea</h2>
+        <p>This page is a placeholder. Answer a few questions, and Claude replaces it with a first draft built from our own design system. Designers take it from there.</p>
+      </section>
+
+      <section class="tiles" id="steps">
+        <a class="tile" href="#steps">
+          <div class="tile-media step step-1"><span>01</span></div>
+          <span class="tile-caption">The one with a few questions</span>
+        </a>
+        <a class="tile" href="#steps">
+          <div class="tile-media step step-2"><span>02</span></div>
+          <span class="tile-caption">The one where AI drafts it</span>
+        </a>
+        <a class="tile" href="kit/">
+          <div class="tile-media step step-3"><span>03</span></div>
+          <span class="tile-caption">The one that's live in a minute</span>
+        </a>
+      </section>
+    </div>
   </main>
+
+  <div class="site-corner">Prototype<br>Build Kit<br>v0.1</div>
 </body>
 </html>

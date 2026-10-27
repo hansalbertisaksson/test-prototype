@@ -1,23 +1,13 @@
 /* Project styles. Use the tokens from core/tokens.css, never raw colours. */
-.hero {
-  padding-block: var(--space-16) var(--space-12);
-  border-bottom: 1px solid var(--color-line);
-  margin-bottom: var(--space-12);
-}
-
-.eyebrow {
-  font-size: var(--size-sm);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-
-.grid {
+.step {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  gap: var(--space-6);
-  padding-bottom: var(--space-16);
+  place-items: center;
+  font-size: var(--size-3xl);
+  letter-spacing: var(--tracking-display);
+  line-height: 1;
 }
-
-code { font-family: var(--font-mono); font-size: 0.9em; }
+.step-1 { background: var(--color-yellow); color: var(--color-black); }
+.step-2 { background: var(--color-violet); color: var(--color-white); }
+.step-3 { background: var(--color-blush); color: var(--color-black); }
+.tile:hover .tile-caption { font-style: italic; }
+.tile:hover { font-style: normal; }
