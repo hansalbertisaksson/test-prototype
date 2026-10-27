@@ -9,12 +9,17 @@ if ! ./scripts/setup.sh; then
   exit 0
 fi
 
-.core/scripts/build-site.sh >/dev/null 2>&1
+# Install the app the first time, then start the Vite preview. It updates as files change.
+if ! command -v npm >/dev/null 2>&1; then
+  echo "Build Kit: Node.js is not installed, so the preview can't start. Ask the person if you may run 'brew install node', then run ./scripts/session-start.sh again."
+  exec .core/hooks/adapters/claude/session-start.sh
+fi
+[ -d node_modules ] || npm install --no-audit --no-fund --loglevel=error >/dev/null 2>&1
 port=8000
 if ! (exec 3<>/dev/tcp/127.0.0.1/$port) 2>/dev/null; then
-  nohup python3 -m http.server $port --directory _site >/dev/null 2>&1 &
+  nohup npx --no-install vite --port $port --strictPort >/dev/null 2>&1 &
   disown
 fi
-echo "Build Kit: the preview is running at http://localhost:$port and rebuilds after every edit. Tell the person the link."
+echo "Build Kit: the preview is running at http://localhost:$port and updates as files change. Tell the person the link."
 
 exec .core/hooks/adapters/claude/session-start.sh

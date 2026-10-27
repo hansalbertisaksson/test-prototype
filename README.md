@@ -1,6 +1,6 @@
-# template-prototype
+# test-prototype
 
-A starting point for a prototype built with AI. It builds from the shared [test-core](https://github.com/hansalbertisaksson/test-core) (house rules, design tokens, skills and checks) and publishes itself to GitHub Pages on every push to `main`.
+A starting point for a prototype built with AI. It builds from the shared [test-core](https://github.com/hansalbertisaksson/test-core) (house rules, skills and checks). Pages are React with [shadcn/ui](https://ui.shadcn.com) components, and publishes itself to GitHub Pages on every push to `main`.
 
 ## Start a new prototype
 
@@ -10,7 +10,7 @@ A starting point for a prototype built with AI. It builds from the shared [test-
 4. Say what you want to make. It asks a few kickoff questions first and writes `docs/brief.md`, then builds from it.
 5. See how it's built at `https://<owner>.github.io/<repo>/kit/`.
 
-Without Claude, run `./scripts/start.sh` for the same setup and preview.
+Without Claude, run `./scripts/start.sh` for the same setup and preview. It needs Node 20 or newer. Add a component with `npx shadcn@latest add <name>`.
 
 If the first build is green but the link shows a 404, open **Settings**, then **Pages**, and choose **Deploy from a branch** with `gh-pages` and `/ (root)`. You only do this once.
 
@@ -18,7 +18,8 @@ If the first build is green but the link shows a 404, open **Settings**, then **
 
 | Path | What it is |
 | --- | --- |
-| `site/` | Everything that gets published |
+| `src/` | The app: `App.tsx` is the start page, `components/ui/` holds the shadcn components |
+| `src/index.css` | The theme. Change the look here |
 | `docs/` | The brief and the decisions log for this prototype |
 | `AGENTS.md` | Rules for this project, on top of the shared house rules |
 | `.core/` | The shared core, read-only, mounted as a git submodule |

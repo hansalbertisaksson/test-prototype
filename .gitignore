@@ -1,5 +1,5 @@
 _site/
-site/core/
+node_modules/
 .env
 .env.*
 !.env.example
