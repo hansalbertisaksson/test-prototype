@@ -9,17 +9,43 @@ if ! ./scripts/setup.sh; then
   exit 0
 fi
 
-# Install the app the first time, then start the Vite preview. It updates as files change.
-if ! command -v npm >/dev/null 2>&1; then
-  echo "Build Kit: Node.js is not installed, so the preview can't start. Ask the person if you may run 'brew install node', then run ./scripts/session-start.sh again."
-  exec .core/hooks/adapters/claude/session-start.sh
-fi
-[ -d node_modules ] || npm install --no-audit --no-fund --loglevel=error >/dev/null 2>&1
-port=8000
-if ! (exec 3<>/dev/tcp/127.0.0.1/$port) 2>/dev/null; then
-  nohup npx --no-install vite --port $port --strictPort >/dev/null 2>&1 &
-  disown
-fi
-echo "Build Kit: the preview is running at http://localhost:$port and updates as files change. Tell the person the link."
+preview() {
+  if ! command -v npm >/dev/null 2>&1; then
+    echo "Build Kit: Node.js is not installed, so the preview can't start. Ask the person if you may run 'brew install node', then run ./scripts/session-start.sh again."
+    return
+  fi
+  if [ ! -d node_modules ]; then
+    if ! log="$(npm install --no-audit --no-fund --loglevel=error 2>&1)"; then
+      echo "Build Kit: npm install failed, so the preview can't start. Fix the cause, then run ./scripts/session-start.sh again. The error:"
+      printf '%s\n' "$log" | tail -15
+      return
+    fi
+  fi
+  # Reuse this project's own preview if it runs, otherwise start one on the first free port from 8000.
+  for port in 8000 8001 8002 8003 8004 8005; do
+    pid="$(lsof -ti "tcp:$port" -sTCP:LISTEN 2>/dev/null | head -1)"
+    if [ -n "$pid" ]; then
+      if [ "$(lsof -a -p "$pid" -d cwd -Fn 2>/dev/null | sed -n 's/^n//p')" = "$(pwd -P)" ]; then
+        echo "Build Kit: the preview is running at http://localhost:$port and updates as files change. Tell the person the link."
+        return
+      fi
+      continue
+    fi
+    nohup npx --no-install vite --port "$port" --strictPort > .vite-preview.log 2>&1 &
+    disown
+    for _ in $(seq 1 30); do
+      if curl -fsS "http://localhost:$port/" >/dev/null 2>&1; then
+        echo "Build Kit: the preview is running at http://localhost:$port and updates as files change. Tell the person the link."
+        return
+      fi
+      sleep 0.5
+    done
+    echo "Build Kit: the preview did not start. The last lines of .vite-preview.log:"
+    tail -15 .vite-preview.log
+    return
+  done
+  echo "Build Kit: ports 8000 to 8005 are all in use, so the preview isn't running. Ask the person to close an old preview."
+}
+preview
 
 exec .core/hooks/adapters/claude/session-start.sh

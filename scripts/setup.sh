@@ -1,14 +1,22 @@
 #!/usr/bin/env bash
-# Gets the latest shared core into .core/ and turns on the git pre-commit check.
+# Gets the latest shared core into .core/ and turns on the git checks.
+# .core/ is not part of this repo (see .gitignore), so updating it never shows up as a change.
 # Safe to run any number of times. Used by start.sh and by the Claude session hook.
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
 core_url="https://github.com/hansalbertisaksson/test-core"
-git submodule update --init --remote -q .core 2>/dev/null
-if [ ! -f .core/AGENTS.md ]; then
+# macOS has no timeout command, so only use it where it exists.
+t() { if command -v timeout >/dev/null 2>&1; then timeout "$@"; else shift; "$@"; fi; }
+if grep -qs 'path = .core' .gitmodules; then
+  # Older projects keep the core as a git submodule.
+  git submodule update --init --remote -q .core 2>/dev/null
+elif [ -d .core/.git ]; then
+  # Update in place. If it can't be reached, keep working with the copy we have.
+  t 60 git -C .core fetch -q --depth 1 origin main 2>/dev/null && git -C .core reset -q --hard FETCH_HEAD
+else
   rm -rf .core
-  git submodule add -q -f "$core_url" .core 2>/dev/null || git clone -q --depth 1 "$core_url" .core
+  t 120 git clone -q --depth 1 "$core_url" .core
 fi
 git config core.hooksPath .core/hooks/adapters/git
 [ -f .core/AGENTS.md ]

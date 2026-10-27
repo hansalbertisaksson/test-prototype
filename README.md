@@ -22,7 +22,7 @@ If the first build is green but the link shows a 404, open **Settings**, then **
 | `src/index.css` | The theme. Change the look here |
 | `docs/` | The brief and the decisions log for this prototype |
 | `AGENTS.md` | Rules for this project, on top of the shared house rules |
-| `.core/` | The shared core, read-only, mounted as a git submodule |
+| `.core/` | The shared core, read-only. `scripts/setup.sh` fetches the latest copy, and it is not part of this repo |
 | `.buildkit` | Which profile applies (`prototype`) |
 
 The same checks run in three places: on `git commit`, after Claude edits a file, and in CI. Only CI is required. The others just tell you sooner.
