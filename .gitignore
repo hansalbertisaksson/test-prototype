@@ -1,0 +1,6 @@
+_site/
+site/core/
+.env
+.env.*
+!.env.example
+.DS_Store

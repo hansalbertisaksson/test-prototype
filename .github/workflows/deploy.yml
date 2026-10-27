@@ -1,0 +1,14 @@
+# Checks, builds and publishes this prototype. The logic lives in the shared core.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  prototype:
+    uses: hansalbertisaksson/test-core/.github/workflows/prototype.yml@main
+    permissions:
+      contents: write
