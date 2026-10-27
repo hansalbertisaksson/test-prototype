@@ -2,7 +2,8 @@
 .step {
   display: grid;
   place-items: center;
-  font-size: var(--size-3xl);
+  font-size: var(--size-display);
+  font-variant-numeric: tabular-nums;
   letter-spacing: var(--tracking-display);
   line-height: 1;
 }
